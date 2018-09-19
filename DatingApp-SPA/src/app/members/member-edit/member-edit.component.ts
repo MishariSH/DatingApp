@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
-import { User } from '../../../_models/user';
 import { ActivatedRoute } from '@angular/router';
-import { AlertifyService } from '../../../_services/alertify.service';
 import { NgForm } from '@angular/forms';
-import { UserService } from '../../../_services/user.service';
-import { AuthService } from '../../../_services/auth.service';
+import { User } from '../../_models/user';
+import { AuthService } from '../../_services/auth.service';
+import { AlertifyService } from '../../_services/alertify.service';
+import { UserService } from '../../_services/user.service';
 
 @Component({
   selector: 'app-member-edit',
@@ -13,6 +13,7 @@ import { AuthService } from '../../../_services/auth.service';
 })
 export class MemberEditComponent implements OnInit {
   user: User;
+  photoUrl: string;
   @ViewChild('editForm') editForm: NgForm;
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
@@ -28,6 +29,7 @@ export class MemberEditComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.user = data['user'];
     });
+    this.authService.currentPhotoUrl.subscribe(photoUrl => this.photoUrl = photoUrl);
   }
 
   updateUser() {
@@ -37,6 +39,10 @@ export class MemberEditComponent implements OnInit {
     }, error => {
       this.alertifyService.error(error);
     });
+  }
+
+  updateMainPhoto(photoUrl) {
+    this.user.photoUrl = photoUrl;
   }
 
 }
